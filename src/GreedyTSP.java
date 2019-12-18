@@ -25,7 +25,7 @@ public class GreedyTSP
 
     static PrintWriter resultsWriter;
 
-    
+
     private int numberOfNodes;
     private Stack<Integer> stack;
     public GreedyTSP()
