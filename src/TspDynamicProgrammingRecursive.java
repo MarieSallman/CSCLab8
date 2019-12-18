@@ -79,6 +79,7 @@ public class TspDynamicProgrammingRecursive {
         Double[][] memo = new Double[N][1 << N];
         Integer[][] prev = new Integer[N][1 << N];
         minTourCost = tsp(START_NODE, state, memo, prev);
+        System.out.println("THis is the" + minTourCost);
 
         // Regenerate path
         int index = START_NODE;
@@ -87,6 +88,7 @@ public class TspDynamicProgrammingRecursive {
             Integer nextIndex = prev[index][state];
             if (nextIndex == null) break;
             int nextState = state | (1 << nextIndex);
+
             state = nextState;
             index = nextIndex;
         }
@@ -95,7 +97,7 @@ public class TspDynamicProgrammingRecursive {
     }
 
     private double tsp(int i, int state, Double[][] memo, Integer[][] prev) {
-
+        double count = 0;
         // Done this tour. Return cost of going back to start node.
         if (state == FINISHED_STATE) return distance[i][START_NODE];
 
@@ -111,12 +113,13 @@ public class TspDynamicProgrammingRecursive {
 
             int nextState = state | (1 << next);
             double newCost = distance[i][next] + tsp(next, nextState, memo, prev);
+
             if (newCost < minCost) {
                 minCost = newCost;
                 index = next;
             }
         }
-
+        //System.out.println(count);
         prev[i][state] = index;
         return memo[i][state] = minCost;
     }
@@ -162,7 +165,7 @@ public class TspDynamicProgrammingRecursive {
             }
         }
 
-        programs(vert, edgemax);
+
 
 
         // Run the solver
@@ -174,6 +177,8 @@ public class TspDynamicProgrammingRecursive {
 
         // Print: 42.0
         System.out.println("Tour cost: " + solver.getTourCost());
+
+        programs(vert, edgemax);
 
         //runFullExperiment("Test-Exp1-ThrowAway.txt");
 

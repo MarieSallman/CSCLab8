@@ -55,17 +55,19 @@ public class TravelingSalesmanSolver {
      */
     public static void main(String[] args) {
         //TODO interpret arguments, for example random seed and number of cities, and brute force or genetic algorithm could be
-        TravelingSalesman salesman = new TravelingSalesman(3, random);
+        TravelingSalesman salesman = new TravelingSalesman(5, random);
 
         salesman.printCosts();
 
         //uncomment for brute force:
 
         //System.out.println("*** running brute force algorithm ***");
-        //TravelingSalesmanBruteForce bruteForce = new TravelingSalesmanBruteForce(salesman);
-        //bruteForce.run();
+        TravelingSalesmanBruteForce bruteForce = new TravelingSalesmanBruteForce(salesman);
+        bruteForce.run();
 
-        int myArr2[][] = GenerateRandomEuclideanCostMatrix(10, 200);
+        System.out.println("\n\n");
+
+        int myArr2[][] = GenerateRandomEuclideanCostMatrix(5, 200);
 
 
         TravelingSalesman salesman2 = new TravelingSalesman(myArr2);
@@ -73,6 +75,17 @@ public class TravelingSalesmanSolver {
 
         TravelingSalesmanBruteForce bruteForce2 = new TravelingSalesmanBruteForce(salesman2);
         bruteForce2.run();
+
+        System.out.println("\n\n");
+
+        int myArr3[][] = GenerateRandomCircularGraphCostMatrix(5, 200);
+
+
+        TravelingSalesman salesman3 = new TravelingSalesman(myArr3);
+        salesman3.printCosts();
+
+        TravelingSalesmanBruteForce bruteForce3 = new TravelingSalesmanBruteForce(salesman3);
+        bruteForce3.run();
 
         //runFullExperiment("Test2-Exp1-ThrowAway.txt");
 
@@ -203,6 +216,80 @@ public class TravelingSalesmanSolver {
 
 
                         double distance = Math.sqrt((y2 - y1) * (y2 - y1) + (x2 - x1) * (x2 - x1));
+
+
+                        int temp = (int)distance;
+                        a[i][j] = temp;
+                        a[j][i] = temp;
+                        e--;
+                    }
+                    else {
+                        a[i][j] = infinity;
+                        a[j][i] = infinity;
+                    }
+                }
+            }
+        }
+        return a;
+    }
+
+    public static int[][] GenerateRandomCircularGraphCostMatrix(int V, int E) {
+        int[][] a = new int[V][V];
+        int e = E;
+        final int NUM_POINTS = e;
+        final double RADIUS = 100d;
+
+        final Point[] points = new Point[NUM_POINTS];
+
+        for (int i = 0; i < NUM_POINTS; ++i)
+        {
+            final double angle = Math.toRadians(((double) i / NUM_POINTS) * 360d);
+
+            points[i] = new Point(
+                    Math.cos(angle) * RADIUS,
+                    Math.sin(angle) * RADIUS
+            );
+        }
+
+
+
+        Random rand = new Random();
+
+        for (int s = 0; s < points.length; s++) {
+            int randomIndexToSwap = rand.nextInt(points.length);
+            Point temp = points[randomIndexToSwap];
+            points[randomIndexToSwap] = points[s];
+            points[s] = temp;
+        }
+
+
+
+
+
+
+        for(int i = 0; i < V; i++) {
+            for(int j = i; j < V; j++) {
+                if(i == j) {
+                    a[i][j] = 0;
+                }
+                else {
+                    if(Math.random() < 0.999 && e >= 0) {
+
+
+
+
+
+                        Point firstSet = points[j];
+                        Point secondSet = points[j+1];
+                        int x1 = firstSet.x;
+                        int y1 = firstSet.y;
+                        int x2 = secondSet.x;
+                        int y2 = secondSet.y;
+
+
+
+                        double distance = Math.sqrt((y2 - y1) * (y2 - y1) + (x2 - x1) * (x2 - x1));
+
 
 
                         int temp = (int)distance;

@@ -1,3 +1,7 @@
+import java.io.FileWriter;
+import java.io.PrintWriter;
+import java.lang.management.ManagementFactory;
+import java.lang.management.ThreadMXBean;
 import java.util.InputMismatchException;
 import java.util.Random;
 import java.util.Scanner;
@@ -5,6 +9,23 @@ import java.util.Stack;
 
 public class GreedyTSP
 {
+
+    static ThreadMXBean bean = ManagementFactory.getThreadMXBean( );
+
+    static int MAXINPUTSIZE  = 20;
+
+    static int MININPUTSIZE  =  3;
+    static long MAXVALUE = 2000;
+    static long MINVALUE = -2000;
+    static long numberOfTrials = 10;
+
+    static String ResultsFolderPath = "/home/marie/Results/"; // pathname to results folder
+
+    static FileWriter resultsFile;
+
+    static PrintWriter resultsWriter;
+
+    
     private int numberOfNodes;
     private Stack<Integer> stack;
     public GreedyTSP()
@@ -18,6 +39,7 @@ public class GreedyTSP
         visited[1] = 1;
         stack.push(1);
         int element, dst = 0, i;
+        int count = 0;
         int min = Integer.MAX_VALUE;
         boolean minFlag = false;
         System.out.print("0" + "\t" + "1" +"\t");
@@ -34,6 +56,7 @@ public class GreedyTSP
                     {
                         min = adjacencyMatrix[element][i];
                         dst = i;
+                        count = count + element;
                         minFlag = true;
                     }
                 }
@@ -51,9 +74,10 @@ public class GreedyTSP
 
             stack.pop();
         }
+        System.out.println("\n Tour cost:" + count);
     }
 
-    public static void main(String... arg)
+    public static void main()
     {
         int number_of_nodes;
         Scanner scanner = null;
@@ -99,6 +123,14 @@ public class GreedyTSP
             System.out.println("Wrong Input format");
         }
         //scanner.close();
+
+
+        runFullExperiment("Test3-Exp1-ThrowAway.txt");
+
+        runFullExperiment("Test3-Exp2.txt");
+
+        runFullExperiment("Test3-Exp3.txt");
+
     }
 
     final static int infinity = 0;
@@ -237,5 +269,117 @@ public class GreedyTSP
             }
         }
         return a;
+    }
+
+    static void runFullExperiment(String resultsFileName){
+
+        try {
+
+            resultsFile = new FileWriter(ResultsFolderPath + resultsFileName);
+
+            resultsWriter = new PrintWriter(resultsFile);
+
+        } catch(Exception e) {
+
+            System.out.println("*****!!!!!  Had a problem opening the results file "+ResultsFolderPath+resultsFileName);
+
+            return; // not very foolproof... but we do expect to be able to create/open the file...
+
+        }
+
+
+
+        ThreadCpuStopWatch BatchStopwatch = new ThreadCpuStopWatch(); // for timing an entire set of trials
+
+        ThreadCpuStopWatch TrialStopwatch = new ThreadCpuStopWatch(); // for timing an individual trial
+
+
+
+        resultsWriter.println("#InputSize    AverageTime"); // # marks a comment in gnuplot data
+
+        resultsWriter.flush();
+
+        for(int inputSize=MININPUTSIZE;inputSize<=MAXINPUTSIZE; inputSize++) {
+
+            // progress message...
+
+            System.out.println("Running test for input size "+inputSize+" ... ");
+
+
+
+            /* repeat for desired number of trials (for a specific size of input)... */
+
+            long batchElapsedTime = 0;
+
+            // generate a list of randomly spaced integers in ascending sorted order to use as test input
+
+            // In this case we're generating one list to use for the entire set of trials (of a given input size)
+
+            // but we will randomly generate the search key for each trial
+
+
+
+
+
+
+            // instead of timing each individual trial, we will time the entire set of trials (for a given input size)
+
+            // and divide by the number of trials -- this reduces the impact of the amount of time it takes to call the
+
+            // stopwatch methods themselves
+
+            //BatchStopwatch.start(); // comment this line if timing trials individually
+
+
+
+            // run the tirals
+
+            for (long trial = 0; trial < 7; trial++) {
+
+                //long[] testingList = createRandomIntegerList(inputSize);
+
+                TrialStopwatch.start(); // *** uncomment this line if timing trials individually
+
+                int vert = inputSize;
+                int edgemax = 200;
+                int myArr[][] = GenerateRandomCostMatrix(vert, edgemax);
+
+
+                double[][] doubleArray = new double[myArr.length][myArr.length];
+                for(int i=0; i<myArr.length; i++) {
+                    for (int j = 0; j < i; j++) {
+                        doubleArray[i][j] = myArr[i][j];
+                    }
+                }
+
+
+                // Run the solver
+                //TspDynamicProgrammingRecursive solver = new TspDynamicProgrammingRecursive(distanceMatrix);
+                TspDynamicProgrammingRecursive solver = new TspDynamicProgrammingRecursive(doubleArray);
+
+                // Prints: [0, 3, 2, 4, 1, 5, 0]
+                //System.out.println("Tour: " + solver.getTour());
+                solver.getTour();
+
+                batchElapsedTime = batchElapsedTime + TrialStopwatch.elapsedTime(); // *** uncomment this line if timing trials individually
+
+            }
+
+            //batchElapsedTime = BatchStopwatch.elapsedTime(); // *** comment this line if timing trials individually
+
+            double averageTimePerTrialInBatch = (double) batchElapsedTime / (double)numberOfTrials; // calculate the average time per trial in this batch
+
+
+
+            /* print data for this size of input */
+
+            resultsWriter.printf("%12d  %15.2f \n",inputSize, averageTimePerTrialInBatch); // might as well make the columns look nice
+
+            resultsWriter.flush();
+
+            System.out.println(" ....done.");
+
+        }
+
     }
 }
