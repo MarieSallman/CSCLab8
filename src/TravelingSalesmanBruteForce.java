@@ -43,7 +43,7 @@ public class TravelingSalesmanBruteForce implements Runnable {
             checkRoute(route,2);
         }
 
-        //System.out.println("Brute force results count: "+count+", minimum cost: "+minCosts+", route: ");
+        System.out.println("Brute force results count: "+count+", minimum cost: "+minCosts+", route: ");
         salesman.printRoute(minRoute);
     }
 

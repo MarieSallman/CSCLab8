@@ -25,9 +25,6 @@ public class ThreadCpuTest{
 
                         double distance = Math.sqrt((y2 - y1) * (y2 - y1) + (x2 - x1) * (x2 - x1));
 
-                        System.out.println("X1 = " + x1 + " X2 = " + x2);
-                        System.out.println("Y1 = " + y1 + " Y2 = " + y2);
-                        System.out.println("Distance = " + distance);
 
                         int temp = (int)distance;
                         a[i][j] = temp;
@@ -62,7 +59,7 @@ public class ThreadCpuTest{
             );
         }
 
-        System.out.println(Arrays.toString(points));
+
 
         Random rand = new Random();
 
@@ -76,7 +73,7 @@ public class ThreadCpuTest{
 
 
 
-        System.out.println(Arrays.toString(points));
+
 
         for(int i = 0; i < V; i++) {
             for(int j = i; j < V; j++) {
@@ -90,9 +87,8 @@ public class ThreadCpuTest{
 
 
 
-                        Point firstSet = points[i];
-                        Point secondSet = points[i+1];
-                        System.out.println(firstSet + " " + secondSet);
+                        Point firstSet = points[j];
+                        Point secondSet = points[j+1];
                         int x1 = firstSet.x;
                         int y1 = firstSet.y;
                         int x2 = secondSet.x;
@@ -102,9 +98,7 @@ public class ThreadCpuTest{
 
                         double distance = Math.sqrt((y2 - y1) * (y2 - y1) + (x2 - x1) * (x2 - x1));
 
-                        System.out.println("X1 = " + x1 + " X2 = " + x2);
-                        System.out.println("Y1 = " + y1 + " Y2 = " + y2);
-                        System.out.println("Distance = " + distance);
+
 
                         int temp = (int)distance;
                         a[i][j] = temp;

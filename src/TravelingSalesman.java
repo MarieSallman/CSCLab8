@@ -88,7 +88,7 @@ public class TravelingSalesman {
             travelCosts += costs[route[i-1]][route[i]];
 
             if(isVerbose){
-                //System.out.println("costs from "+route[i-1]+" to "+route[i]+": "+costs[route[i-1]][route[i]]);
+                System.out.println("costs from "+route[i-1]+" to "+route[i]+": "+costs[route[i-1]][route[i]]);
             }
 
         }
@@ -96,26 +96,28 @@ public class TravelingSalesman {
         //return to starting city
         travelCosts += costs[route[n-1]][route[0]];
         if(isVerbose){
-            //System.out.println("costs from "+route[n-1]+" to "+route[0]+": "+costs[route[n-1]][route[0]]);
+            System.out.println("costs from "+route[n-1]+" to "+route[0]+": "+costs[route[n-1]][route[0]]);
         }
         return travelCosts;
     }
 
     public void printRoute(int[] route){
         for(int i = 0;i<route.length;i++){
-            //System.out.print(route[i]+" ");
+            System.out.print(route[i]+" ");
         }
     }
 
     public void printCosts(){
-        //System.out.println("costs matrix for the traveling salesman problem:");
-        /*
+        System.out.println("costs matrix for the traveling salesman problem:");
+
         for(int i = 0;i<costs.length;i++){
             for(int j = 0;j<costs[i].length;j++){
                 System.out.print(costs[i][j]+" ");
             }
             System.out.print("\n");
-        }*/
+        }
     }
+
+
 
 }

@@ -121,6 +121,8 @@ public class TspDynamicProgrammingRecursive {
         return memo[i][state] = minCost;
     }
 
+
+
     // Example usage:
     public static void main(String[] args) {
 
@@ -160,6 +162,8 @@ public class TspDynamicProgrammingRecursive {
             }
         }
 
+        programs(vert, edgemax);
+
 
         // Run the solver
         //TspDynamicProgrammingRecursive solver = new TspDynamicProgrammingRecursive(distanceMatrix);
@@ -171,11 +175,11 @@ public class TspDynamicProgrammingRecursive {
         // Print: 42.0
         System.out.println("Tour cost: " + solver.getTourCost());
 
-        runFullExperiment("Test-Exp1-ThrowAway.txt");
+        //runFullExperiment("Test-Exp1-ThrowAway.txt");
 
-        runFullExperiment("Test-Exp2.txt");
+        //runFullExperiment("Test-Exp2.txt");
 
-        runFullExperiment("Test-Exp3.txt");
+        //runFullExperiment("Test-Exp3.txt");
     }
 
     static void runFullExperiment(String resultsFileName){
@@ -315,5 +319,180 @@ public class TspDynamicProgrammingRecursive {
             }
         }
         return a;
+    }
+
+    public static int[][] GenerateRandomEuclideanCostMatrix(int V, int E) {
+        int[][] a = new int[V][V];
+        int e = E;
+
+        for(int i = 0; i < V; i++) {
+            for(int j = i; j < V; j++) {
+                if(i == j) {
+                    a[i][j] = 0;
+                }
+                else {
+                    if(Math.random() < 0.999 && e >= 0) {
+
+                        int x1 = (int)(Math.random() * ((e - 1) + 1)) + 1;
+                        int x2 = (int)(Math.random() * ((e - 1) + 1)) + 1;
+                        int y1 = (int)(Math.random() * ((e - 1) + 1)) + 1;
+                        int y2 = (int)(Math.random() * ((e - 1) + 1)) + 1;
+
+
+
+                        double distance = Math.sqrt((y2 - y1) * (y2 - y1) + (x2 - x1) * (x2 - x1));
+
+
+                        int temp = (int)distance;
+                        a[i][j] = temp;
+                        a[j][i] = temp;
+                        e--;
+                    }
+                    else {
+                        a[i][j] = infinity;
+                        a[j][i] = infinity;
+                    }
+                }
+            }
+        }
+        return a;
+    }
+
+    public static int[][] GenerateRandomCircularGraphCostMatrix(int V, int E) {
+        int[][] a = new int[V][V];
+        int e = E;
+        final int NUM_POINTS = e;
+        final double RADIUS = 100d;
+
+        final Point[] points = new Point[NUM_POINTS];
+
+        for (int i = 0; i < NUM_POINTS; ++i)
+        {
+            final double angle = Math.toRadians(((double) i / NUM_POINTS) * 360d);
+
+            points[i] = new Point(
+                    Math.cos(angle) * RADIUS,
+                    Math.sin(angle) * RADIUS
+            );
+        }
+
+
+
+        Random rand = new Random();
+
+        for (int s = 0; s < points.length; s++) {
+            int randomIndexToSwap = rand.nextInt(points.length);
+            Point temp = points[randomIndexToSwap];
+            points[randomIndexToSwap] = points[s];
+            points[s] = temp;
+        }
+
+
+
+
+
+
+        for(int i = 0; i < V; i++) {
+            for(int j = i; j < V; j++) {
+                if(i == j) {
+                    a[i][j] = 0;
+                }
+                else {
+                    if(Math.random() < 0.999 && e >= 0) {
+
+
+
+
+
+                        Point firstSet = points[j];
+                        Point secondSet = points[j+1];
+                        int x1 = firstSet.x;
+                        int y1 = firstSet.y;
+                        int x2 = secondSet.x;
+                        int y2 = secondSet.y;
+
+
+
+                        double distance = Math.sqrt((y2 - y1) * (y2 - y1) + (x2 - x1) * (x2 - x1));
+
+
+
+                        int temp = (int)distance;
+                        a[i][j] = temp;
+                        a[j][i] = temp;
+                        e--;
+                    }
+                    else {
+                        a[i][j] = infinity;
+                        a[j][i] = infinity;
+                    }
+                }
+            }
+        }
+        return a;
+    }
+
+    public static void programs(int vert, int edgemax){
+        int myArr2[][] = GenerateRandomEuclideanCostMatrix(vert, edgemax);
+
+        for(
+                int i = 0;
+                i<myArr2.length;i++)
+
+
+        //Used to print out the generated array
+        {
+            for (int j = 0; j < myArr2[i].length; j++) {
+
+                System.out.printf("%-5d", myArr2[i][j]);
+            }
+            System.out.println();
+        }
+
+        double[][] doubleArray = new double[myArr2.length][myArr2.length];
+        for(int i=0; i<myArr2.length; i++) {
+            for (int j = 0; j < i; j++) {
+                doubleArray[i][j] = myArr2[i][j];
+            }
+        }
+
+        TspDynamicProgrammingRecursive solver = new TspDynamicProgrammingRecursive(doubleArray);
+
+        // Prints: [0, 3, 2, 4, 1, 5, 0]
+        System.out.println("Tour: " + solver.getTour());
+
+        // Print: 42.0
+        System.out.println("Tour cost: " + solver.getTourCost());
+
+        int myArr3[][] = GenerateRandomCircularGraphCostMatrix(vert, edgemax);
+
+        for(
+                int i = 0;
+                i<myArr3.length;i++)
+
+
+        //Used to print out the generated array
+        {
+            for (int j = 0; j < myArr3[i].length; j++) {
+
+                System.out.printf("%-5d", myArr3[i][j]);
+            }
+            System.out.println();
+        }
+
+        double[][] doubleArray2 = new double[myArr3.length][myArr3.length];
+        for(int i=0; i<myArr3.length; i++) {
+            for (int j = 0; j < i; j++) {
+                doubleArray2[i][j] = myArr3[i][j];
+            }
+        }
+
+        TspDynamicProgrammingRecursive solver2 = new TspDynamicProgrammingRecursive(doubleArray2);
+
+        // Prints: [0, 3, 2, 4, 1, 5, 0]
+        System.out.println("Tour: " + solver2.getTour());
+
+        // Print: 42.0
+        System.out.println("Tour cost: " + solver2.getTourCost());
     }
 }

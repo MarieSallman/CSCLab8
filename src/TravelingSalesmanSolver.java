@@ -61,15 +61,24 @@ public class TravelingSalesmanSolver {
 
         //uncomment for brute force:
 
-        System.out.println("*** running brute force algorithm ***");
-        TravelingSalesmanBruteForce bruteForce = new TravelingSalesmanBruteForce(salesman);
-        bruteForce.run();
+        //System.out.println("*** running brute force algorithm ***");
+        //TravelingSalesmanBruteForce bruteForce = new TravelingSalesmanBruteForce(salesman);
+        //bruteForce.run();
 
-        runFullExperiment("Test2-Exp1-ThrowAway.txt");
+        int myArr2[][] = GenerateRandomEuclideanCostMatrix(10, 200);
 
-        runFullExperiment("Test2-Exp2.txt");
 
-        runFullExperiment("Test2-Exp3.txt");
+        TravelingSalesman salesman2 = new TravelingSalesman(myArr2);
+        salesman2.printCosts();
+
+        TravelingSalesmanBruteForce bruteForce2 = new TravelingSalesmanBruteForce(salesman2);
+        bruteForce2.run();
+
+        //runFullExperiment("Test2-Exp1-ThrowAway.txt");
+
+        //runFullExperiment("Test2-Exp2.txt");
+
+        //runFullExperiment("Test2-Exp3.txt");
 
 
 
@@ -172,6 +181,43 @@ public class TravelingSalesmanSolver {
 
         }
 
+    }
+    final static int infinity = 0;
+    public static int[][] GenerateRandomEuclideanCostMatrix(int V, int E) {
+        int[][] a = new int[V][V];
+        int e = E;
+
+        for(int i = 0; i < V; i++) {
+            for(int j = i; j < V; j++) {
+                if(i == j) {
+                    a[i][j] = 0;
+                }
+                else {
+                    if(Math.random() < 0.999 && e >= 0) {
+
+                        int x1 = (int)(Math.random() * ((e - 1) + 1)) + 1;
+                        int x2 = (int)(Math.random() * ((e - 1) + 1)) + 1;
+                        int y1 = (int)(Math.random() * ((e - 1) + 1)) + 1;
+                        int y2 = (int)(Math.random() * ((e - 1) + 1)) + 1;
+
+
+
+                        double distance = Math.sqrt((y2 - y1) * (y2 - y1) + (x2 - x1) * (x2 - x1));
+
+
+                        int temp = (int)distance;
+                        a[i][j] = temp;
+                        a[j][i] = temp;
+                        e--;
+                    }
+                    else {
+                        a[i][j] = infinity;
+                        a[j][i] = infinity;
+                    }
+                }
+            }
+        }
+        return a;
     }
 
 }
